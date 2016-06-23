@@ -1,0 +1,40 @@
+body {
+    background-color: #B1B8C1;
+}
+
+* {
+    color: #021D3F;
+}
+
+a {
+    color: #223A89;
+}
+
+.error {
+    display: none;
+    color: red;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 5px;
+    margin: 5px;
+}
+
+.output {
+    min-height: 100px;
+    height: auto;
+    width: 50%;
+    margin: 20px auto;
+    background-color: #ddd;
+    border-radius: 5px;
+    ;2padding: 5px;
+    border: 1px solid #051C38;
+}
+
+.errorDiv {
+    margin: 0 auto;
+    color: red;
+    font-size: 16px;
+    text-align: center;
+}
