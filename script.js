@@ -1,33 +1,58 @@
-$(document).ready(function() {
-    $("#searchBtn").on("click", function() {
-        var query = $("#searchTxt");
-        if (query.val() === "") {
-            $(".error").show();
-        } else {
-            $(".error").hide();
-            search(query);
-            query.val("");
-        }
-    });
+document.getElementById('random-article').addEventListener('click', function() {
+    document.getElementById('search-form').reset();
+    document.getElementById('output').innerHTML = '';
+});
+
+document.getElementById('search-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    let query = document.getElementById('query').value;
+
+    if (query == '') {
+        document.querySelector('.alert-danger').style.display = 'block';
+
+        setTimeout(function () {
+            document.querySelector('.alert-danger').style.display = 'none';
+        }, 3000);
+    } else {
+        search(query);
+    }
 });
 
 function search(query) {
     $.ajax({
         dataType: "jsonp",
-        url: "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=info|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=" + query.val(),
-        success: function(data) {
-            var outcome = data.query.pages;
-            $(".output").remove();
-            for (var object in outcome) {
-                $("#output").html("");
-                var page = "https://en.wikipedia.org/?curid=" + object;
-                var title = outcome[object].title;
-                var extract = outcome[object].extract;
-                var div = document.createElement("div");
-                div.className = "output";
-                div.innerHTML = "<h2><a target=\"_blank\" href=\"" + page + "\">" + title + "</a></h2>";
-                div.innerHTML += "<p>" + extract + "</p>";
-                document.body.appendChild(div);
+        url: "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=info|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=" + query,
+        success: function (data) {
+            var output = document.getElementById('output');
+            output.innerHTML = '';
+            var pages = data.query.pages;
+            for (var page in pages) {
+                var url = "https://en.wikipedia.org/?curid=" + page;
+                var title = pages[page].title;
+                var extract = pages[page].extract;
+
+                var card = document.createElement("div");
+                var cardBody = document.createElement("div");
+                var cardTitle = document.createElement('h4');
+                var cardText = document.createElement('p');
+                var urlBtn = document.createElement('button');
+                
+                card.setAttribute('class', 'card mt-4');
+                cardBody.setAttribute('class', 'card-body');
+                cardTitle.setAttribute('class', 'card-title');
+                cardText.setAttribute('class', 'card-text');
+                urlBtn.setAttribute('class', 'btn btn-primary');
+                
+                cardTitle.textContent = title;
+                cardText.textContent = extract;
+                urlBtn.innerHTML = '<a href="' + url + '" target="_blank" class="article-link">Go to article</a>';
+
+                cardBody.appendChild(cardTitle);
+                cardBody.appendChild(cardText);
+                cardBody.appendChild(urlBtn);
+                card.appendChild(cardBody);
+                output.appendChild(card);
             }
         }
     });
