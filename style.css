@@ -1,5 +1,13 @@
 body {
-    background-color: #C9C4EA;
+    background-color: #CCCBF6;
+}
+
+h1 {
+    color: #3937AA;
+}
+
+#random-article {
+    color: #3937AA;
 }
 
 .article-link {
