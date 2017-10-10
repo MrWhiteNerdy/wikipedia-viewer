@@ -1,4 +1,4 @@
-document.getElementById('random-article').addEventListener('click', function() {
+document.getElementById('random-article').addEventListener('click', function () {
     document.getElementById('search-form').reset();
     document.getElementById('output').innerHTML = '';
 });
@@ -8,7 +8,7 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
 
     let query = document.getElementById('query').value;
 
-    if (query == '') {
+    if (query === '') {
         document.querySelector('.alert-danger').style.display = 'block';
 
         setTimeout(function () {
@@ -20,40 +20,37 @@ document.getElementById('search-form').addEventListener('submit', function (e) {
 });
 
 function search(query) {
-    $.ajax({
-        dataType: "jsonp",
-        url: "https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=info|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&gsrsearch=" + query,
-        success: function (data) {
-            var output = document.getElementById('output');
-            output.innerHTML = '';
-            var pages = data.query.pages;
-            for (var page in pages) {
-                var url = "https://en.wikipedia.org/?curid=" + page;
-                var title = pages[page].title;
-                var extract = pages[page].extract;
+    fetch('https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrnamespace=0&gsrlimit=10&prop=info|extracts&pilimit=max&exintro&explaintext&exsentences=1&exlimit=max&origin=*&gsrsearch=' + query)
+        .then(function (response) {
+            return response.json()
+        })
+        .then(function (data) {
+            outputData(data);
+        });
+}
 
-                var card = document.createElement("div");
-                var cardBody = document.createElement("div");
-                var cardTitle = document.createElement('h4');
-                var cardText = document.createElement('p');
-                var urlBtn = document.createElement('button');
-                
-                card.setAttribute('class', 'card mt-4');
-                cardBody.setAttribute('class', 'card-body');
-                cardTitle.setAttribute('class', 'card-title');
-                cardText.setAttribute('class', 'card-text');
-                urlBtn.setAttribute('class', 'btn btn-primary');
-                
-                cardTitle.textContent = title;
-                cardText.textContent = extract;
-                urlBtn.innerHTML = '<a href="' + url + '" target="_blank" class="article-link">Go to article</a>';
+function outputData(data) {
+    const output = document.getElementById('output');
+    output.innerHTML = '';
+    const pages = data.query.pages;
 
-                cardBody.appendChild(cardTitle);
-                cardBody.appendChild(cardText);
-                cardBody.appendChild(urlBtn);
-                card.appendChild(cardBody);
-                output.appendChild(card);
-            }
-        }
-    });
+    for (let page in pages) {
+        const url = "https://en.wikipedia.org/?curid=" + page;
+        const title = pages[page].title;
+        const extract = pages[page].extract;
+
+        let content = `
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h4 class="card-title">${title}</h4>
+                    <p class="card-text">${extract}</p>
+                    <button class="btn btn-primary">
+                        <a href="${url}" class="article-link" target="_blank">Go to article</a>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        output.innerHTML += (content);
+    }
 }
