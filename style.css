@@ -1,19 +1,25 @@
 body {
-    background-color: #CCCBF6;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-h1 {
-    color: #3937AA;
+main {
+  flex: 1 0 auto;
 }
 
-#random-article {
-    color: #3937AA;
+form {
+  margin-top: 30px;
 }
 
-.article-link {
-    color: white;
+.col {
+  margin-bottom: 20px;
 }
 
-.alert {
-    display: none;
+.card {
+  margin-bottom: 20px;
+}
+
+.card p {
+  font-size: 1.1rem;
 }
